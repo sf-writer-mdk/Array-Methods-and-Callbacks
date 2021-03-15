@@ -119,7 +119,7 @@ function getWinnersByYear(arr, cb1, cb2) {
   let years = cb1(arr)
 
   return winners.map(function (item, i) {
-    return `In ${years[i]}, ${[item]} won the world cup!`
+    return `In ${years[i]}, ${item} won the world cup!`
   })
 }
 
