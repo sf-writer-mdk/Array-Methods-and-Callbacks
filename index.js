@@ -86,17 +86,20 @@ Use the higher-order function getWinners to do the following:
 3. Determines the winner (home or away) of each `finals` game. 
 4. Returns the names of all winning countries in an array called `winners` */
 
-function getWinners(arr, getFinals) {
-  return getFinals(arr).map(function (item) {
+function getWinners(arr, cb) {
+  let winners = []
+  cb(arr).forEach(function (item) {
     if (item['Home Team Goals'] > item['Away Team Goals']) {
-      return item['Home Team Name']
+      winners.push(item['Home Team Name'])
     } else if (item['Away Team Goals'] > item['Home Team Goals']) {
-      return item['Away Team Name']
+      winners.push(item['Away Team Name'])
     } else {
-      // could not get the backslash away from contraction
-      return `It's a tie between ${item['Home Team Name']} and ${item['Away Team Name']}`
+      winners.push(
+        `It's a tie between ${item['Home Team Name']} and ${item['Away Team Name']}`
+      )
     }
   })
+  return winners
 }
 
 console.log(getWinners(fifaData, getFinals))
@@ -111,10 +114,9 @@ Use the higher-order function getWinnersByYear to do the following:
 hint: the strings returned need to exactly match the string in step 4.
  */
 
-function getWinnersByYear() {}
-// function getWinnersByYear(arr, getYears, getWinners) {
-//   let winners = getWinners(arr)
-//   let years = getYears(arr)
+// function getWinnersByYear(arr, cb1, cb2) {
+//   let winners = cb2(arr)
+//   let years = cb1(arr)
 
 //   return winners.map(function (item, i) {
 //     return `In ${years[i]}, ${[item]} won the world cup!`
@@ -133,26 +135,20 @@ Use the higher order function getAverageGoals to do the following:
  Example of invocation: getAverageGoals(getFinals(fifaData));
 */
 
-// function getAverageGoals(/* code here */) {
-//   /* code here */
-// }
-
 // ! MUST use fifaData as well if we're going to use the getFinals function. We must return an array of objects. We can use 'reduce' on an array but not a function
-function getAverageGoals(mainArr, getFinals) {
-  const aveHT = getFinals(mainArr).reduce(function (accumulator, currentValue) {
+function getAverageGoals(cb) {
+  const aveHT = cb.reduce(function (accumulator, currentValue) {
     return accumulator + currentValue['Home Team Goals']
   }, 0)
 
-  const aveAT = getFinals(mainArr).reduce(function (accumulator, currentValue) {
+  const aveAT = cb.reduce(function (accumulator, currentValue) {
     return accumulator + currentValue['Away Team Goals']
   }, 0)
 
-  return `${
-    aveAT / getFinals(mainArr).length + aveHT / getFinals(mainArr).length
-  }`
+  return `${Math.round((aveAT / cb.length + aveHT / cb.length) * 100) / 100}`
 }
 
-console.log(getAverageGoals(fifaData, getFinals))
+console.log(getAverageGoals(getFinals(fifaData)))
 
 /// 🥅 STRETCH 🥅 ///
 
@@ -192,6 +188,6 @@ export default {
   getFinals,
   getYears,
   getWinners,
-  getWinnersByYear,
+  //getWinnersByYear,
   getAverageGoals,
 }
